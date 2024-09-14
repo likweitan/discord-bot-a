@@ -66,6 +66,10 @@ async function parseImage(imagePath) {
     console.error("Error during OCR processing:", err);
     throw err;
   } finally {
+    if (imagePath && await fileExists(imagePath)) {
+      await deleteFile(imagePath);
+    }
+
     if (enhancedImagePath && await fileExists(enhancedImagePath)) {
       await deleteFile(enhancedImagePath);
     }

@@ -126,9 +126,12 @@ client.on('messageCreate', async (message) => {
                     // Call the parseImage function
                     const receiptData = await parseImage(filePath);
 
-                    // Create and send the embed message
-                    const embed = createReceiptEmbed(receiptData);
-                    message.reply({ embeds: [embed] });
+                    if (receiptData.merchant != 'Unknown Merchant')
+                    {
+                        // Create and send the embed message
+                        const embed = createReceiptEmbed(receiptData);
+                        message.reply({ embeds: [embed] });
+                    }
 
                 } catch (error) {
                     console.error('Error processing image:', error);
