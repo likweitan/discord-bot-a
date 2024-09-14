@@ -1,3 +1,4 @@
+require('dotenv').config();
 
 const { Client, GatewayIntentBits, EmbedBuilder } = require('discord.js');
 const axios = require('axios');
@@ -16,7 +17,7 @@ const client = new Client({
 });
 
 // Replace with your bot's token
-const TOKEN = '';
+const TOKEN = process.env.TOKEN;
 
 client.once('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
@@ -44,7 +45,7 @@ function getThumbnail(receipt) {
         thumbnail = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRT3Df4n8SQ0JiB8P_Q5GiB16Z-TzJLT_vYPw&s';
     }
     else if (isLOTUS) {
-        thumbnail = 'https://play-lh.googleusercontent.com/_hj7TTfgnCg2EVqla_usxGQIBhMwWRWqHVfHHJxJkFC87O6vRsKKcjA5KAGTgvkIm5I=w600-h300-pc0xffffff-pd';
+        thumbnail = 'https://raw.githubusercontent.com/likweitan/discord-bot-a/main/assets/lotus.jpg';
     }
 
     return thumbnail;
@@ -56,6 +57,23 @@ function createReceiptEmbed(receipt) {
         .setTitle('Receipt Details')
         .setDescription(`Merchant: ${receipt.merchant}`)
         .setThumbnail(getThumbnail(receipt))
+        .addFields(
+            // {
+            //     name: 'Subtotal',
+            //     value: `$${receipt.totals.subtotal.toFixed(2)}`,
+            //     inline: true
+            // },
+            {
+                name: 'Total',
+                value: `RM${receipt.totals.total.toFixed(2)}`,
+                inline: true
+            },
+            // {
+            //     name: 'Tax',
+            //     value: `$${receipt.totals.tax.toFixed(2)}`,
+            //     inline: true
+            // }
+        )
         .addFields(
             {
                 name: 'Date',
@@ -71,29 +89,14 @@ function createReceiptEmbed(receipt) {
         .addFields(
             ...receipt.items.map(item => ({
                 name: item.name,
-                value: `Code: ${item.code}\nQuantity: ${item.quantity}\nPrice: $${item.price.toFixed(2)}`,
+                // value: `Code: ${item.code}\nQuantity: ${item.quantity}\nPrice: RM${item.price.toFixed(2)}`,
+                value: `Quantity: ${item.quantity}\nPrice: RM${item.price.toFixed(2)}`,
                 inline: false
             }))
         )
-        .addFields(
-            {
-                name: 'Subtotal',
-                value: `$${receipt.totals.subtotal.toFixed(2)}`,
-                inline: true
-            },
-            {
-                name: 'Total',
-                value: `$${receipt.totals.total.toFixed(2)}`,
-                inline: true
-            },
-            {
-                name: 'Tax',
-                value: `$${receipt.totals.tax.toFixed(2)}`,
-                inline: true
-            }
-        )
+        .setTimestamp()
         .setColor('#00ff00') // Green color
-        .setFooter({ text: 'Thank you for your purchase!' });
+        .setFooter({ text: 'Presented by Evenly' });
 
     return embed;
 }

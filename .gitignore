@@ -42,3 +42,6 @@ coverage/
 
 # Optional: Uncomment the following line if you use `npm link`
 # .npm/
+
+# Downloads
+download/
